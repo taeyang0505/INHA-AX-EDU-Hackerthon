@@ -178,10 +178,10 @@ LOOKteracy/
 |---|---|---|---|
 | face-api.js (@vladmandic/face-api 1.7.15) | 얼굴 인식 | MIT | `dist/vendor/face-api/LICENSE` |
 | MediaPipe Tasks Vision | 눈 깜빡임 확인 | Apache-2.0 | `dist/vendor/mediapipe-tasks/LICENSE` |
-| WebGazer.js 3.5.3 | 시선 추적 | GPL-3.0-or-later | `dist/vendor/webgazer/LICENSE.md` |
+| WebGazer.js 3.5.3 | 시선 추적 | GPL-3.0-or-later | `dist/vendor/webgazer/LICENSE.md`, `dist/vendor/webgazer/GPL-3.0.txt`(전문) |
 | MediaPipe Face Mesh (WebGazer와 함께 씀) | 시선 추적용 얼굴 특징점 | Apache-2.0 | `dist/vendor/webgazer/mediapipe/face_mesh/LICENSE` |
 | TensorFlow.js (webgazer.js 안에 포함) | 시선 추적 계산 | Apache-2.0 | 없음 |
 | Anthropic TypeScript SDK 1.8.0 (선택) | Claude 채점 | Apache-2.0 | `npm install` 뒤 `node_modules/@anthropic-ai/sdk` |
 | Noto Sans KR (Google Fonts) | 글꼴 | OFL-1.1 | 인터넷에서 불러옴 |
 
-WebGazer.js는 GPL-3.0-or-later입니다(webgazer.js 머리말에는 기업 가치 100만 달러 미만 조직은 LGPLv3로 쓸 수 있다고 적혀 있습니다). 이 시스템을 외부에 배포할 때는 라이선스 조건을 확인해야 합니다. `LICENSE.md`에는 GPL 전문이 아니라 안내문만 있으니, 배포할 때는 GPL-3.0 전문(https://www.gnu.org/licenses/gpl-3.0.txt)을 함께 넣으세요.
+WebGazer.js는 GPL-3.0-or-later입니다(webgazer.js 머리말에는 기업 가치 100만 달러 미만 조직은 LGPLv3로 쓸 수 있다고 적혀 있습니다). 이 시스템을 외부에 배포할 때는 라이선스 조건을 확인해야 합니다. WebGazer의 `LICENSE.md`는 안내문이라, GPL-3.0 전문(https://www.gnu.org/licenses/gpl-3.0.txt)을 같은 폴더에 `GPL-3.0.txt`로 함께 넣어 두었습니다.
