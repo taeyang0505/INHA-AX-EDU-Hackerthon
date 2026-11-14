@@ -1,0 +1,281 @@
+/* realtime.css — LOOKteracy에 추가한 화면 스타일
+   기존 디자인 토큰(--ink, --muted, --line, --blue, --bg)과 기존 컴포넌트(.card .pill .btn .rubric .note .tabs .segments)를
+   그대로 쓰고, 새로 필요한 부분만 정의한다. 클래스 앞머리: fp- 페이스패스 · gz- 시선 · in- 대시보드·성장.
+
+   목차                                               화면을 만드는 파일
+   1. 공통
+   2. 로그인·가입 (페이스패스)                         facepass.js
+   3. 학습 준비 · 시선 보정                            gaze.js
+   4. 지문 읽기 중 시선                                gaze.js
+   5. 진단 리포트: 히트맵 · 시선 경로 · 단어별 지표       gaze.js       (교사 > 진단·피드백)
+   6. 대시보드: 개념 진단 · 변화율 · 모둠 추천           insight.js    (교사 > 대시보드, 리포트 옆 카드)
+   7. 나의 성장 · 레벨 · 목표 · 칭찬                    insight.js    (학생 > 홈, 나의 성장)
+   8. 칭찬 보내기 · 보호자 소식 창                      insight.js
+   9. 반응형
+   10. 최신 UI 연결: 지문 밑줄, 카메라 영역, 보정 점선, 읽기 도구줄, 피드백 화면   여러 파일
+   11. 진단·피드백 목록                              insight.js
+   12. 드롭다운 화살표                               공통
+   13. 수업·테스트 구성                              teacher.js
+   14. 리포트 학습 성장 추이                         feedback.js
+   15. 포인트 주황색 (--point)                       insight.js, grading.js
+   16. 리포트 시선 지표 · 5개 영역 점수              gaze.js, grading.js
+
+   의미 색: 기존 지식 #8cc1a4 · 난개념 #9cc3dc · 오개념 #e8b07c · 앞으로 읽기 #3e749a · 되돌아 읽기 #e0763c
+            시선 집중도 그라데이션은 gaze.js의 GZ_STOPS / GZ_GRADIENT */
+
+/* ---------- 1. 공통 ---------- */
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+
+/* ---------- 2. 로그인·가입 (페이스패스) ---------- */
+.face-frame.fp-live{position:relative;overflow:hidden;background:#dfe9f1}
+.fp-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1);z-index:0}
+.face-frame.fp-live .face-corner{z-index:1;border-color:#ffffffd9}
+.face-frame.fp-live .face-label{z-index:1}
+.face-frame.fp-live.is-blink .face-corner{border-color:#8fd0b0}
+.face-state.is-error{color:#b26a4f}
+.fp-meter{position:absolute;left:50%;bottom:44px;transform:translateX(-50%);width:42%;height:5px;border-radius:99px;background:#ffffff8c;overflow:hidden;z-index:1}
+.fp-meter i{display:block;height:100%;width:0;border-radius:inherit;background:#9cc3dc;transition:width 60ms linear}
+.fp-meter.is-closed i{background:#5fbf8f}
+.fp-role{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0 18px}
+.fp-role label{display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 12px;border:1px solid var(--line);border-radius:10px;font-size:14px;color:var(--muted);cursor:pointer;background:#fff}
+.fp-role label.active{border-color:#9fc0d6;background:#eef5fa;color:var(--ink);font-weight:600}
+.fp-role input{accent-color:var(--blue)}
+/* 가입 유형 선택, 로그인 후 공간 선택 */
+.fp-role-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0 18px}
+.fp-role-card{display:flex;flex-direction:column;align-items:flex-start;gap:8px;text-align:left;padding:20px 18px;border:1.5px solid var(--line);border-radius:14px;background:#fff;cursor:pointer;color:var(--muted);font:inherit;line-height:1.6}
+.fp-role-card strong{font-size:18px;color:var(--ink)}
+.fp-role-card span{font-size:13px}
+.fp-role-card:hover{border-color:#bcd3e3}
+.fp-role-card.active{border-color:var(--blue);background:#eef5fa;box-shadow:0 0 0 3px #3e749a1f}
+.fp-role-card:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+.fp-choose{display:grid;gap:10px}
+
+/* ---------- 3. 학습 준비 · 시선 보정 ---------- */
+.gz-preview.is-live{background:#dfe9f1;border-style:solid}
+.gz-preview-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.gz-preview .face-label{z-index:1;max-width:calc(100% - 24px);text-align:center}
+/* 전체 화면 보정 */
+.gz-overlay{position:fixed;inset:0;z-index:2000;background:var(--bg,#f3f7fb);cursor:default}
+.gz-cal-msg{position:absolute;left:50%;top:31%;transform:translateX(-50%);margin:0;font-size:15px;color:var(--ink);text-align:center;width:min(560px,90vw);line-height:1.7}
+.gz-point{--fill:0;position:absolute;width:34px;height:34px;border-radius:50%;transform:translate(-50%,-50%);border:3px solid #9cbfd7;background:conic-gradient(var(--blue) calc(var(--fill)*360deg),#dcebf6 0);cursor:pointer;padding:0;box-shadow:0 0 0 9px #e3eef7}
+.gz-point i{position:absolute;left:50%;top:50%;width:8px;height:8px;margin:-4px 0 0 -4px;border-radius:50%;background:#fff}
+.gz-point:focus-visible{outline:3px solid var(--blue);outline-offset:6px}
+.gz-check{position:absolute;left:50%;top:50%;width:26px;height:26px;border-radius:50%;transform:translate(-50%,-50%);background:#d9534f;box-shadow:0 0 0 10px #f6dcdb}
+.gz-check i{position:absolute;inset:9px;border-radius:50%;background:#fff}
+.gz-cal-cancel{position:absolute;right:20px;bottom:18px;border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:8px;padding:8px 12px;font-size:12px;cursor:pointer}
+@media (prefers-reduced-motion:no-preference){.gz-point{transition:left .35s ease,top .35s ease}}
+
+/* ---------- 4. 지문 읽기 중 시선 ---------- */
+.status-strip.is-live .status-dot{background:#4caf7d;box-shadow:0 0 0 4px #4caf7d26}
+.gz-dot{position:fixed;left:-7px;top:-7px;width:14px;height:14px;border-radius:50%;background:#e0613fcc;border:2px solid #fff;pointer-events:none;z-index:1500;transition:transform 60ms linear,opacity .2s}
+.gw.gz-hit{background:#ffe7a8;border-radius:3px;box-shadow:0 0 0 2px #ffe7a8}
+
+/* ---------- 5. 진단 리포트: 히트맵 · 시선 경로 · 단어별 지표 ---------- */
+.gz-replica{position:relative;width:100%;margin:18px 0 6px;background:#fbfdfe;border:1px solid #e5edf3;border-radius:12px;overflow:hidden}
+.gz-replica>canvas,.gz-replica>svg{position:absolute;inset:0;width:100%;height:100%}
+.gz-replica>canvas{mix-blend-mode:multiply}
+.gz-text text{fill:#526471;font-family:'Noto Sans KR',sans-serif}
+.gz-text text.is-long{fill:#b2482f;font-weight:700}
+.gz-path .gz-sac{stroke:#3e749a;stroke-opacity:.55;stroke-width:1.6;vector-effect:non-scaling-stroke}
+.gz-path .gz-sac.back{stroke:#e0763c;stroke-opacity:.8}
+.gz-path .gz-fix{fill:#3e749a33;stroke:#3e749a;stroke-width:1.2;vector-effect:non-scaling-stroke}
+.gz-path .gz-num{font-size:10px;font-weight:600;fill:#1f4560;text-anchor:middle;dominant-baseline:central;font-family:'Noto Sans KR',sans-serif}
+.gz-legend{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:12px;color:#5f7686;margin-top:10px}
+.gz-legend i{display:inline-block;height:10px;flex:1;min-width:80px;border-radius:99px}
+.gz-legend .muted{color:#91a5b4}
+.gz-legend i.gz-key{flex:0 0 22px;min-width:22px;height:3px}
+.gz-key.fwd{background:#3e749a}
+.gz-key.back{background:#e0763c}
+.gz-caption{margin-top:6px;color:#8ba0af}
+.gz-obs{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:4px 0 16px}
+.gz-obs>div{border:1px solid #e5edf3;border-radius:10px;padding:12px 14px;background:#fbfdfe}
+.gz-obs label{display:block;font-size:11px;color:#8ba0af;margin-bottom:4px}
+.gz-obs p{margin:0;font-size:13px;line-height:1.7;color:#3c5566}
+.gz-table-wrap{overflow-x:auto;margin:16px 0 4px}
+.gz-table{width:100%;border-collapse:collapse;font-size:13px}
+.gz-table th,.gz-table td{padding:9px 10px;border-bottom:1px solid #e9f0f5;text-align:right;white-space:nowrap}
+.gz-table th:first-child,.gz-table td:first-child{text-align:left}
+.gz-table th{font-size:11px;color:#8ba0af;font-weight:500}
+.gz-table tr.is-long td{color:#b2482f}
+.gz-table small{font-size:10px;color:#9aaab6;margin-left:4px}
+/* 시선 경로 화살표, 히트맵 위 경로, 경로 재생 */
+.gz-tools{display:flex;gap:8px;justify-content:flex-end;margin:14px 0 -6px}
+.gz-path .gz-ah.fwd{fill:#3e749a}
+.gz-path .gz-ah.back{fill:#e0763c}
+.gz-path.is-overlay .gz-sac{stroke:#244a66;stroke-opacity:.7;stroke-width:1.4}
+.gz-path.is-overlay .gz-sac.back{stroke:#d9662a;stroke-opacity:.9}
+.gz-path.is-overlay .gz-ah.fwd{fill:#244a66}
+.gz-path.is-overlay .gz-fix{fill:#fff;stroke:#244a66;stroke-width:1.4}
+.gz-path .gz-tag{font-size:12px;font-weight:700;fill:#1f4560;text-anchor:middle;font-family:'Noto Sans KR',sans-serif;paint-order:stroke;stroke:#fff;stroke-width:3px}
+.gz-path .gz-cursor{fill:none;stroke:#d9534f;stroke-width:2.5;vector-effect:non-scaling-stroke;opacity:0}
+.gz-path.is-replaying [data-k]{opacity:0;transition:opacity .15s}
+.gz-path.is-replaying [data-k].is-shown{opacity:1}
+.gz-path.is-replaying .gz-cursor{opacity:1}
+
+/* ---------- 6. 대시보드: 개념 진단 · 변화율 · 모둠 추천 ---------- */
+.in-dash{margin-bottom:23px}
+.in-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:#6f8798;margin:2px 0 16px}
+.in-legend span{display:inline-flex;align-items:center;gap:6px}
+.in-legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.in-legend i.known,.in-bar .known,.in-mini .known{background:#8cc1a4}
+.in-legend i.difficult,.in-bar .difficult,.in-mini .difficult{background:#9cc3dc}
+.in-legend i.misconception,.in-bar .misconception,.in-mini .misconception{background:#e8b07c}
+.in-concept-row{padding:14px 0;border-top:1px solid var(--line)}
+.in-concept-row h3{font-size:15px;margin:0}
+.in-concept-row .micro{display:block;margin-top:6px}
+.in-bar{display:flex;height:10px;border-radius:99px;overflow:hidden;background:#eef3f7;margin-top:10px}
+.in-bar span{display:block;height:100%}
+.in-change{font-size:13px;font-weight:600;color:#8094a3;white-space:nowrap}
+.in-change.up{color:#4f8a6c}
+.in-change.down{color:#b26a4f}
+.in-table-wrap{overflow-x:auto;margin-top:6px}
+.in-table{width:100%;border-collapse:collapse;font-size:13px}
+.in-table th,.in-table td{padding:10px 8px;border-bottom:1px solid #e9f0f5;text-align:left;white-space:nowrap;vertical-align:middle}
+.in-table th{font-size:11px;color:#8ba0af;font-weight:500}
+.in-table td.in-act{text-align:right}
+.in-table .btn.sm{min-height:32px;padding:6px 11px;font-size:12px}
+.in-person{display:flex;align-items:center;gap:9px}
+.in-person .avatar{width:30px;height:30px;font-size:12px}
+.in-person small{font-size:10px;color:#9aaab6;margin-left:3px}
+.in-mini{display:inline-flex;gap:4px}
+.in-mini i{font-style:normal;font-size:11px;font-weight:600;color:#fff;min-width:20px;height:20px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center}
+.in-groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:18px 0}
+.in-group{padding:16px;border:1px solid var(--line);border-radius:12px;background:#fbfdfe}
+.in-group h3{font-size:14px;margin:0}
+.in-group ul{list-style:none;padding:0;margin:12px 0 10px;display:grid;gap:8px}
+.in-group li{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.in-group .small{margin:0;font-size:12px;line-height:1.7}
+/* 리포트 옆 개념·성장 카드 */
+.in-report-group{padding:10px 0;border-top:1px solid var(--line)}
+.in-report-group .small{margin:8px 0 0;font-size:12px;line-height:1.7}
+
+/* ---------- 7. 나의 성장 · 레벨 · 목표 · 칭찬 ---------- */
+.in-cycle-card .section-head{margin-bottom:16px}
+.in-cycle{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.in-step{display:flex;gap:12px;align-items:flex-start;padding:16px;border-radius:12px;background:#f6f9fc;border:1px solid transparent}
+.in-step strong{font-size:14px;color:var(--ink)}
+.in-step p{font-size:12px;line-height:1.7;color:#7d93a3;margin-top:4px}
+.in-step-no{flex:0 0 26px;height:26px;border-radius:50%;background:#e1ebf2;color:#6f8ea5;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.in-step.done .in-step-no{background:#dff0e6;color:#4f8a6c}
+.in-step.active{background:#fff;border-color:#bcd6e7;box-shadow:0 0 0 3px #3e749a12}
+.in-step.active .in-step-no{background:var(--blue);color:#fff}
+.in-chart{display:block;width:100%;height:auto;margin:6px 0 14px}
+.in-chart .in-grid{stroke:#e6eef4;stroke-width:1}
+.in-chart .in-axis{font-size:11px;fill:#93a6b4;dominant-baseline:middle;font-family:'Noto Sans KR',sans-serif}
+.in-chart .in-line{fill:none;stroke:var(--blue);stroke-width:2.5;stroke-linejoin:round}
+.in-chart .in-dot{fill:#fff;stroke:var(--blue);stroke-width:2.5}
+.in-chart .in-val{font-size:12px;font-weight:700;fill:#2f536d;font-family:'Noto Sans KR',sans-serif}
+.in-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.in-col{display:flex;flex-direction:column;gap:10px;min-width:0}
+.in-concept{padding:14px;border-radius:11px;background:#f6f9fc}
+.in-concept h3{font-size:14px;margin:0 0 4px}
+.in-concept p{font-size:12px;line-height:1.7;color:#71889a}
+.in-concept .micro{display:block;margin-top:6px}
+.in-level-head{display:flex;align-items:baseline;gap:10px;margin:10px 0 12px}
+.in-level-head strong{font-size:30px;color:var(--ink);letter-spacing:-1px}
+.in-level-head span{font-size:14px;color:#5d778a;font-weight:600}
+.in-xp{height:8px;border-radius:99px;background:#e8f0f6;overflow:hidden}
+.in-xp i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#7fb0d1,var(--blue))}
+.in-level .small{margin:10px 0 8px}
+.in-earn{list-style:none;padding:0;margin:4px 0 0;display:grid;gap:6px;font-size:12px;color:#7d93a3}
+.in-earn li{padding-left:12px;position:relative}
+.in-earn li::before{content:'';position:absolute;left:0;top:8px;width:4px;height:4px;border-radius:50%;background:#9cc3dc}
+.in-goal-option{display:block;width:100%;text-align:left;padding:13px 14px;margin-top:10px;border:1px solid var(--line);border-radius:11px;background:#fff;cursor:pointer;font:inherit}
+.in-goal-option strong{display:block;font-size:14px;color:var(--ink)}
+.in-goal-option span{display:block;font-size:12px;color:#7d93a3;margin-top:3px;line-height:1.6}
+.in-goal-option:hover{border-color:#bcd3e3;background:#f8fbfd}
+.in-goal-option:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.in-goal-past{margin:8px 0 0;display:flex;align-items:center;gap:8px}
+.in-praise{padding:12px 0;border-bottom:1px solid var(--line)}
+.in-praise:last-child{border-bottom:0}
+.in-praise p{font-size:14px;color:var(--ink);line-height:1.7}
+.in-praise-card{background:#f3f9f5;border-color:#e0eee6}
+.in-praise-card p{font-size:15px;color:#35584a;line-height:1.7;margin:10px 0 6px}
+
+/* ---------- 8. 칭찬 보내기 · 보호자 소식 창 ---------- */
+.in-chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.in-chips .pill{cursor:pointer;border:0}
+#in-praise-text,.in-parent-text{width:100%;min-height:110px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;font-size:14px;line-height:1.7;resize:vertical}
+.in-parent-text{min-height:260px;font-size:13px}
+
+/* ---------- 9. 반응형 ---------- */
+@media (max-width:720px){.gz-obs{grid-template-columns:1fr}}
+@media (max-width:560px){.fp-role-cards{grid-template-columns:1fr}}
+@media(max-width:1250px){.in-cycle{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:1050px){.in-cols{grid-template-columns:1fr}.in-dash.grid2{grid-template-columns:1fr}}
+@media(max-width:620px){.in-cycle{grid-template-columns:1fr}.in-groups{grid-template-columns:1fr}}
+
+/* ---------- 10. 최신 UI 연결 (2026-11-14) ---------- */
+/* 지문 원문의 밑줄(㉠~㉢) */
+.passage u.passage-mark{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:5px}
+/* 학습 준비 카드의 4:3 카메라 영역에 실제 영상 */
+.prep-camera-surface{position:relative;overflow:hidden}
+.prep-camera-surface.is-live{background:#dfe9f1}
+.prep-camera-surface .prep-surface-caption{z-index:1;background:#ffffffcc;border-radius:6px;padding:3px 8px;left:50%;right:auto;transform:translateX(-50%);max-width:calc(100% - 24px)}
+.prep-completed .gz-quality{font-size:13px;color:#5f8a73;margin:-12px 0 20px}
+.prep-completed .gz-quality.is-low{color:#a27743}
+.prep-completed .btn + .btn{margin-top:10px}
+/* 전체 화면 보정: 학습 준비 카드와 같은 점선 경로 */
+.gz-trail{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.gz-trail polyline{stroke:#8bb5d0;stroke-width:3.2;stroke-dasharray:5 9;stroke-linecap:round;stroke-linejoin:round;opacity:.8;vector-effect:non-scaling-stroke}
+.gz-cal-caption{position:absolute;left:0;right:0;bottom:22px;text-align:center;color:#8aa6b9;font-size:13px;margin:0}
+/* 지문 읽기 도구줄: 시선 수집 상태와 시선 점 보기 */
+.gz-live-pill{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:#8ba1b1;white-space:nowrap}
+.gz-live-pill.is-live .status-dot{background:#4caf7d;box-shadow:0 0 0 4px #4caf7d26}
+.gz-dot-toggle{font-size:12px;color:var(--blue);border:1px solid var(--line);border-radius:7px;padding:5px 9px;background:#fff;cursor:pointer;white-space:nowrap}
+.gz-dot-toggle[aria-pressed="true"]{background:#edf5fb;border-color:#bcd3e3}
+/* 학생 피드백 화면: 04 문항별 확인, 자동 분석 표시, 오른쪽 레벨 카드 */
+.fb-auto-pill{margin-top:10px}
+.fb-check-list .rubric{margin:10px 0}
+.fb-check-note{margin:10px 0 0}
+.in-rail-card{margin-top:16px}
+.in-rail-praise{padding:12px 14px;border-radius:10px;background:#f3f9f5;margin:4px 0 12px}
+.in-rail-praise p{font-size:13px;line-height:1.7;color:#35584a;margin-top:2px}
+@media(max-width:620px){.gz-live-pill [data-gz-live]{display:none}.gz-dot-toggle{font-size:10px;padding:4px 7px}}
+/* 보정 그만두기 버튼은 아래 안내 문구와 겹치지 않게 오른쪽 위에 */
+.gz-overlay .gz-cal-cancel{top:18px;bottom:auto}
+
+/* 11. 진단·피드백 목록 */
+.report-meta{align-items:center}
+.report-meta .pill{margin-left:2px}
+.rp-list tbody tr[data-action]{cursor:pointer}
+.rp-list tbody tr[data-action]:hover td{background:#f8fbfd}
+.report-stat-row>div{word-break:keep-all}
+.report-stat-row strong{overflow-wrap:normal}
+
+/* 12. 드롭다운 화살표: 기본 화살표가 오른쪽 테두리에 걸려 잘려 보이던 문제 */
+select{-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='%237d98ab' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 4.5l3 3 3-3'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-size:12px 12px;padding-right:34px}
+.page-head .actions select{padding-right:34px}
+.member-row select{padding-right:30px;background-position:right 9px center}
+.teacher-actions select{padding-right:28px;background-position:right 8px center}
+select::-ms-expand{display:none}
+
+/* 13. 수업·테스트 구성: 지문을 길게 보고, 출처는 다음 버튼 옆에 */
+.builder-passage .answer-editor{min-height:420px}
+.builder-actions{flex-wrap:nowrap;gap:16px}
+.builder-actions .btn{flex:none}
+.builder-actions .source-box{margin:0;flex:1;min-width:0;display:flex;flex-wrap:wrap;gap:2px 18px;padding:12px 17px;font-size:12px;line-height:1.8}
+@media(max-width:800px){.builder-actions{flex-wrap:wrap}.builder-actions .source-box{flex-basis:100%}.builder-passage .answer-editor{min-height:320px}}
+
+/* 14. 리포트 오른쪽 학습 성장 추이: 옆 상자와 같은 여백·제목 */
+.report-growth-card{padding:27px;border-radius:19px}
+.report-growth-card .growth-heading h2{font-size:17px;font-weight:600;color:#263f51;line-height:1.6}
+
+/* 15. 포인트 주황색: 배경의 하늘색과 어울리는 채도 있는 파스텔 주황 */
+:root{--point:#F4A261;--point-strong:#DE7F3C;--point-soft:#FDEFE3;--point-line:#F6C9A2}
+.pill.in-mentor{background:var(--point-soft);color:var(--point-strong);box-shadow:inset 0 0 0 1px var(--point-line);font-weight:600}
+.in-group h3.in-band{color:var(--point-strong)}
+
+/* 16. 리포트: 시선 지표를 탭 위에, 5개 영역 점수 */
+.report-gaze-top{margin:6px 0 20px}
+.report-gaze-top .report-stat-row{margin:0 0 10px}
+.report-gaze-top .gz-obs{margin:0}
+.report-radar-card{padding:27px;border-radius:19px}
+.report-radar-card h3{font-size:17px;font-weight:600;color:#263f51;margin:0}
+.fb-radar{display:block;width:100%;height:auto;margin-top:6px;overflow:visible;font-family:inherit}
+.fb-radar-grid{fill:none;stroke:#e5eef5;stroke-width:1}
+.fb-radar-axis{stroke:#e5eef5;stroke-width:1}
+.fb-radar-area{fill:rgba(244,162,97,.42);stroke:#EE8A3C;stroke-width:2.5;stroke-linejoin:round}
+.fb-radar-dot{fill:#fff;stroke:#EE8A3C;stroke-width:2}
+.fb-radar-label{font-size:12.5px;fill:#5d7688}
+.fb-radar-value{font-size:14px;font-weight:700;fill:#DE7F3C}

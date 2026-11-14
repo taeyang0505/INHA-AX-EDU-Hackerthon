@@ -1,0 +1,34 @@
+const fs=require('node:fs');
+const vm=require('node:vm');
+const assert=require('node:assert/strict');
+const code=fs.readFileSync(require('node:path').join(__dirname,'../dist/cooperation.js'),'utf8');
+const storage=new Map();
+function boot(){
+ const pending=[];
+ const ctx={studentNames:['김서윤','이지우','박하린','최도윤','정수아','윤지호','한예린','오민재','이서준','강다은'],baseStatus:['분석 완료','분석 완료','제출 완료','응시 중','분석 완료','분석 완료','분석 완료','준비 중','준비 실패','시작 전'],passageTitle:'도시의 녹지는 누구를 위한 것인가',st:{page:'t-group-detail'},views:{},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v)},sessionStorage:{getItem:()=>null,setItem:()=>{}},setTimeout:fn=>{pending.push(fn);return pending.length},clearTimeout:()=>{},render:()=>{},route:()=>{},console};
+ vm.createContext(ctx);
+ vm.runInContext(code+'\nthis.api={coopRecords,exampleClassification,addCoopGroup,saveCoopFinal,startCoopAnalysis,persistCoop};',ctx);
+ return {ctx,api:ctx.api,drain:()=>{while(pending.length)pending.shift()()}};
+}
+let {ctx,api,drain}=boot();
+const prior=JSON.stringify(api.coopRecords['test-02']);
+assert.equal(api.coopRecords['test-03'].ai,null);
+api.startCoopAnalysis('test-03');drain();
+assert(api.coopRecords['test-03'].ai.A.includes('김서윤'));
+assert(!Object.values(api.coopRecords['test-03'].ai).flat().includes('최도윤'),'unfinished tests cannot enter the AI classification');
+assert(api.coopRecords['test-03'].ai.B.includes('김서윤'),'one student may appear in multiple AI boxes');
+const immutableAI=JSON.stringify(api.coopRecords['test-03'].ai);
+assert.equal(api.addCoopGroup('test-03','연결 모둠',['김서윤','김서윤','이지우']).group.members.length,2);
+assert(api.addCoopGroup('test-03','확장 모둠',['김서윤','정수아']).ok,'teacher may reuse a student in a separate group');
+assert.equal(api.addCoopGroup('test-03','연결 모둠',['박하린']).ok,false,'duplicate group names rejected');
+assert.equal(api.addCoopGroup('test-03','빈 그룹',['없는 학생']).ok,false,'outside students not admitted');
+assert(api.saveCoopFinal('test-03').ok);
+assert.equal(JSON.stringify(api.coopRecords['test-03'].ai),immutableAI,'teacher edits preserve the AI snapshot');
+assert.equal(JSON.stringify(api.coopRecords['test-02']),prior,'other tests are isolated');
+const saved=JSON.stringify(api.coopRecords['test-03'].finalGroups);
+const reloaded=boot().api;
+assert.equal(JSON.stringify(reloaded.coopRecords['test-03'].finalGroups),saved,'saved final groups survive reload');
+assert.equal(JSON.stringify(reloaded.coopRecords['test-03'].ai),immutableAI,'saved AI results survive reload');
+reloaded.coopRecords['test-03'].draftGroups[0].members.push('한예린');
+assert.equal(JSON.stringify(reloaded.coopRecords['test-03'].finalGroups),saved,'draft edits cannot alter final snapshot');
+console.log('PASS: overlapping AI classifications, autonomous groups, per-test isolation, reload persistence, immutable final snapshot');

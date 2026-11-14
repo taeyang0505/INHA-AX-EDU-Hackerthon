@@ -1,0 +1,18 @@
+{
+  "name": "lookteracy",
+  "version": "0.2.0",
+  "private": true,
+  "description": "LOOKteracy: 웹캠 시선 추적으로 읽기 과정을 진단하는 문해력 학습 서비스",
+  "engines": {
+    "node": ">=20.12"
+  },
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "start": "node scripts/serve.mjs",
+    "check": "node scripts/check.mjs",
+    "test": "node scripts/test.mjs"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.8.0"
+  }
+}
