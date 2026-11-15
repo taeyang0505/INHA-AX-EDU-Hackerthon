@@ -1,5 +1,25 @@
 # LOOKteracy
 
+<p>
+  <a href="https://educollege.inha.ac.kr/bbs/edcollege/944/193812/artclView.do"><img alt="2026 INHA AX-EDU HACKATHON" src="https://img.shields.io/badge/2026-INHA%20AX--EDU%20HACKATHON-0B2A4A?style=flat-square"></a>
+  <a href="https://educollege.inha.ac.kr/bbs/edcollege/944/193812/artclView.do"><img alt="최우수상 (2위)" src="https://img.shields.io/badge/%EC%B5%9C%EC%9A%B0%EC%88%98%EC%83%81-2nd%20Place-C9A227?style=flat-square"></a>
+</p>
+<p>
+  <a href="https://www.inha.ac.kr"><img alt="인하대학교" src="https://img.shields.io/badge/%EC%9D%B8%ED%95%98%EB%8C%80%ED%95%99%EA%B5%90-Inha%20University-004A99?style=flat-square"></a>
+  <a href="https://educollege.inha.ac.kr"><img alt="인하대학교 사범대학" src="https://img.shields.io/badge/%EC%82%AC%EB%B2%94%EB%8C%80%ED%95%99-College%20of%20Education-1F6FB2?style=flat-square"></a>
+  <img alt="인하대학교 SW중심대학사업단" src="https://img.shields.io/badge/SW%EC%A4%91%EC%8B%AC%EB%8C%80%ED%95%99%EC%82%AC%EC%97%85%EB%8B%A8-SW--Centered%20University-2E8B9A?style=flat-square">
+</p>
+<p>
+  <img alt="JavaScript" src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black">
+  <img alt="HTML5" src="https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white">
+  <img alt="CSS3" src="https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css&logoColor=white">
+  <img alt="MediaPipe" src="https://img.shields.io/badge/MediaPipe-0097A7?style=flat-square&logo=mediapipe&logoColor=white">
+  <img alt="face-api.js" src="https://img.shields.io/badge/face--api.js-5C2D91?style=flat-square">
+  <img alt="WebGazer.js" src="https://img.shields.io/badge/WebGazer.js-3E749A?style=flat-square">
+  <img alt="Node.js" src="https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=nodedotjs&logoColor=white">
+  <img alt="Claude" src="https://img.shields.io/badge/Claude-D97757?style=flat-square&logo=anthropic&logoColor=white">
+</p>
+
 웹캠으로 학생이 지문을 읽는 과정을 기록하고, 답안과 함께 분석해 개념 이해 상태를 진단하는 문해력 학습 서비스입니다. 이 폴더는 2026년 11월 14일 기준으로 지금까지 구현한 시스템 전체입니다.
 
 ## 1. 실행하기
