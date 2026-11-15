@@ -5,9 +5,13 @@
   <a href="https://educollege.inha.ac.kr/bbs/edcollege/944/193812/artclView.do"><img alt="최우수상 (2위)" src="https://img.shields.io/badge/%EC%B5%9C%EC%9A%B0%EC%88%98%EC%83%81-2nd%20Place-C9A227?style=flat-square"></a>
 </p>
 <p>
+  <a href="https://www.msit.go.kr"><img alt="과학기술정보통신부" src="https://img.shields.io/badge/%EA%B3%BC%ED%95%99%EA%B8%B0%EC%88%A0%EC%A0%95%EB%B3%B4%ED%86%B5%EC%8B%A0%EB%B6%80-MSIT-003E7E?style=flat-square"></a>
+  <a href="https://www.iitp.kr"><img alt="정보통신기획평가원" src="https://img.shields.io/badge/%EC%A0%95%EB%B3%B4%ED%86%B5%EC%8B%A0%EA%B8%B0%ED%9A%8D%ED%8F%89%EA%B0%80%EC%9B%90-IITP-0072BC?style=flat-square"></a>
   <a href="https://www.inha.ac.kr"><img alt="인하대학교" src="https://img.shields.io/badge/%EC%9D%B8%ED%95%98%EB%8C%80%ED%95%99%EA%B5%90-Inha%20University-004A99?style=flat-square"></a>
   <a href="https://educollege.inha.ac.kr"><img alt="인하대학교 사범대학" src="https://img.shields.io/badge/%EC%82%AC%EB%B2%94%EB%8C%80%ED%95%99-College%20of%20Education-1F6FB2?style=flat-square"></a>
-  <img alt="인하대학교 SW중심대학사업단" src="https://img.shields.io/badge/SW%EC%A4%91%EC%8B%AC%EB%8C%80%ED%95%99%EC%82%AC%EC%97%85%EB%8B%A8-SW--Centered%20University-2E8B9A?style=flat-square">
+  <a href="https://swuniv.inha.ac.kr"><img alt="인하대학교 SW중심대학사업단" src="https://img.shields.io/badge/SW%EC%A4%91%EC%8B%AC%EB%8C%80%ED%95%99%EC%82%AC%EC%97%85%EB%8B%A8-SW--Centered%20University-2E8B9A?style=flat-square"></a>
+  <img alt="슈퍼스쿨" src="https://img.shields.io/badge/%EC%8A%88%ED%8D%BC%EC%8A%A4%EC%BF%A8-SuperSchool-F28C28?style=flat-square">
+  <a href="https://toss.im"><img alt="toss" src="https://img.shields.io/badge/%ED%86%A0%EC%8A%A4-toss-0064FF?style=flat-square"></a>
 </p>
 <p>
   <img alt="JavaScript" src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black">
